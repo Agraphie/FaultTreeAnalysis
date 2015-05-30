@@ -1,0 +1,26 @@
+group 'de.rwth.fta'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = "main"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.springframework:spring-context:4.1.6.RELEASE'
+    compile 'org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.9.4'
+
+}
+
+run{
+    standardOutput = System.out
+}
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4' //version required
+}
