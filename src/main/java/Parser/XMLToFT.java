@@ -1,7 +1,6 @@
 package Parser;
 
 import Model.FaultTree;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
@@ -24,10 +23,7 @@ public class XMLToFT {
             faultTree = (FaultTree) jaxbUnmarshaller.unmarshal(new File("C:\\Users\\Kazako\\Documents\\RWTH\\SS2015\\Functional\\ft.xml"));
         } catch (JAXBException e) {
             e.printStackTrace();
-            System.out.println("Penis");
         }
-
-        System.out.println("läuft");
 
         return faultTree;
     }

@@ -1,33 +1,30 @@
 package Model;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import javax.xml.bind.annotation.*;
 
 /**
  * Created by Kazako on 30.05.2015.
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class FaultTree {
-    List<Event> events = null;
+    @XmlElement
+    Node node;
+    @XmlAttribute
     String name;
 
-    public List<Event> getEvents() {
-        return events;
+    public Node getNode() {
+        return node;
     }
 
-    @XmlElement(name="event")
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void setNode(Node node) {
+        this.node = node;
     }
-
 
     public String getName() {
         return name;
     }
 
-    @XmlAttribute
     public void setName(String name) {
         this.name = name;
     }

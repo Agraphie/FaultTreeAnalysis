@@ -1,6 +1,5 @@
 import Model.FaultTree;
 import Parser.XMLToFT;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,8 +11,10 @@ import org.springframework.context.annotation.Configuration;
 public class main {
 
     static XMLToFT xmlToFT = new XMLToFT();
+    static BDDTest bddTest = new BDDTest();
     public static void main(String[] args) {
         FaultTree faultTree = xmlToFT.parse();
-        System.out.println(faultTree.getEvents().get(0).getName());
+        System.out.println(faultTree.getNode().getNodes().get(1).getNodes().get(1).getProbability());
+        bddTest.quickTest();
     }
 }
