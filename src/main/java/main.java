@@ -1,4 +1,6 @@
+import Model.BDDWithProbabilities;
 import Model.FaultTree;
+import Parser.FTToBDD;
 import Parser.XMLToFT;
 
 /**
@@ -7,10 +9,16 @@ import Parser.XMLToFT;
 public class main {
 
     static XMLToFT xmlToFT = new XMLToFT();
-    static BDDTest bddTest = new BDDTest();
+    static FTToBDD ftToBDD = new FTToBDD();
+    static CalculateProbability calculateProbability = new CalculateProbability();
+
     public static void main(String[] args) {
         FaultTree faultTree = xmlToFT.parse();
         System.out.println(faultTree.getNode().getNodes().get(1).getNodes().get(1).getProbability());
-        bddTest.quickTest();
+        BDDWithProbabilities bdd = ftToBDD.parse(faultTree);
+        System.out.println(calculateProbability.calculateSystemFailure(bdd));
+
+
+        //   bddTest.quickTest();
     }
 }

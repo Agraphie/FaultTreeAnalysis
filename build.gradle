@@ -13,12 +13,15 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'org.springframework:spring-test:4.1.6.RELEASE'
+
     compile 'org.springframework:spring-context:4.1.6.RELEASE'
     compile 'org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.9.4'
     compile files('libs/javabdd-1.0b2.jar')
 }
 
 run{
+    dependsOn tasks.withType(Test)
     standardOutput = System.out
 }
 task wrapper(type: Wrapper) {

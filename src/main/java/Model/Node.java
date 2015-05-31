@@ -71,11 +71,11 @@ public class Node {
         this.probability = probability;
     }
 
-    enum Type {
+    public enum Type {
         gate, event
     }
 
-    enum Operator {
+    public enum Operator {
         OR, AND
     }
 }

@@ -12,6 +12,7 @@ public class FaultTree {
     Node node;
     @XmlAttribute
     String name;
+    int varNum;
 
     public Node getNode() {
         return node;
@@ -19,6 +20,14 @@ public class FaultTree {
 
     public void setNode(Node node) {
         this.node = node;
+    }
+
+    public int getVarNum() {
+        return varNum;
+    }
+
+    public void setVarNum(int varNum) {
+        this.varNum = varNum;
     }
 
     public String getName() {
