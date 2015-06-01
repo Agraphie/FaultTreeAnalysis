@@ -1,7 +1,6 @@
 package Parser;
 
 import Model.FaultTree;
-import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,23 +10,23 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
 import javax.xml.transform.stream.StreamSource;
+import java.io.File;
 
 /**
  * Created by Kazako on 30.05.2015.
  */
-@Component
 public class XMLToFT {
     FaultTree faultTree = null;
     int varCount = 0;
 
-    public FaultTree parse(){
+    public FaultTree parse(File file) {
         JAXBContext jaxbContext;
 
         try {
             jaxbContext = JAXBContext.newInstance(FaultTree.class);
 
             XMLInputFactory xif = XMLInputFactory.newFactory();
-            XMLStreamReader xsr = xif.createXMLStreamReader(new StreamSource("C:\\Users\\Kazako\\Documents\\RWTH\\SS2015\\Functional\\ft.xml"));
+            XMLStreamReader xsr = xif.createXMLStreamReader(new StreamSource(file));
             xsr = new StreamReaderDelegate(xsr) {
 
                 @Override
