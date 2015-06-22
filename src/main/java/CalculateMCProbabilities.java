@@ -28,7 +28,7 @@ public class CalculateMCProbabilities {
         int iterations = 20;
         double lambda = getLambda(generatorMatrix);
         double tempMultiplier;
-        int position = 0;
+        int iterationPosition = 1;
         int matrixColumnCount = initialProbabilities.length;
 
         RealMatrix multiplicationMatrix = MatrixUtils.createRealMatrix(iterations, matrixColumnCount);
@@ -39,7 +39,6 @@ public class CalculateMCProbabilities {
         RealMatrix transitionMatrix = identityMatrix.add(realGeneratorMatrix.scalarMultiply(1 / lambda));
 
         RealVector tempIterationVector;
-        RealVector tempPreviousIterationVector;
         RealMatrix tempIterationTransitionMatrix;
 
         result.setRowVector(0, initialProbabilitiesVector);
@@ -49,18 +48,16 @@ public class CalculateMCProbabilities {
             multiplicationMatrix.setRowVector(i, tempIterationVector);
         }
 
-
-
         for (double t = samplingInterval; t <= missionTime; t += samplingInterval) {
+            tempIterationVector = result.getRowVector(iterationPosition);
+
             for (int n = 0; n < iterations; n++) {
                 tempMultiplier = Math.pow((lambda * t), n) / factorial(n) * Math.exp(-lambda * t);
-                tempPreviousIterationVector = result.getRowVector(position);
-                tempIterationVector = tempPreviousIterationVector.add(multiplicationMatrix.getRowVector(n).mapMultiply(tempMultiplier));
-
-                result.setRowVector(position, tempIterationVector);
+                tempIterationVector = tempIterationVector.add(multiplicationMatrix.getRowVector(n).mapMultiply(tempMultiplier));
             }
 
-            position++;
+            result.setRowVector(iterationPosition, tempIterationVector);
+            iterationPosition++;
         }
 
         return result;
