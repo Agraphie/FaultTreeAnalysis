@@ -10,7 +10,7 @@ public class main {
 
     static XMLToFT xmlToFT = new XMLToFT();
     static FTToBDD ftToBDD = new FTToBDD();
-    static CalculateProbability calculateProbability = new CalculateProbability();
+    static CalculateMCProbabilities calculateMCProbabilities = new CalculateMCProbabilities();
     static FileHandler fileHandler = new FileHandler();
 
     public static void main(String[] args) {
@@ -18,7 +18,11 @@ public class main {
         FaultTree faultTree = xmlToFT.parse(fileHandler.getFile());
         System.out.println(faultTree.getNode().getNodes().get(1).getNodes().get(1).getProbability());
         BDDWithProbabilities bdd = ftToBDD.parse(faultTree);
-        System.out.println(calculateProbability.calculateSystemFailure(bdd));
+
+        double[] initialProbabilities = {0.9, 0.1, 0};
+        double[][] generatorMatrix = {{-0.2, 0.2,0},{0.1,-0.2,0.1},{0,0.05,-0.05}};
+
+        calculateMCProbabilities.calculateMCProbabilities(initialProbabilities, generatorMatrix, 0.5, 40);
 
 
         //   bddTest.quickTest();

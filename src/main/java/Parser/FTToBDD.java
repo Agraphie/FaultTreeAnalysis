@@ -6,6 +6,8 @@ import Model.Node;
 import net.sf.javabdd.BDD;
 import net.sf.javabdd.BDDFactory;
 
+import java.util.HashMap;
+
 /**
  * Created by Kazako on 31.05.2015.
  */
@@ -14,6 +16,7 @@ public class FTToBDD {
     private int counter = 0;
     private double[] probabilitiesTrue;
     private double[] probabilitiesFalse;
+    private HashMap<Integer, BDD> alreadyVisitedNodes;
 
     public BDDWithProbabilities parse(FaultTree faultTree) {
         int varNum = faultTree.getVarNum();
@@ -21,6 +24,7 @@ public class FTToBDD {
         bddFactory.setVarNum(varNum);
         probabilitiesTrue = new double[varNum];
         probabilitiesFalse = new double[varNum];
+        alreadyVisitedNodes = new HashMap<>();
 
         Node tempNode = faultTree.getNode();
         BDD bdd = build(tempNode);
@@ -32,8 +36,11 @@ public class FTToBDD {
 
     private BDD build(Node node) {
         BDD bdd = null;
+        Integer hashValue = node.hashCode();
 
-        if (node.getType() == Node.Type.gate) {
+        if(alreadyVisitedNodes.containsKey(hashValue)){
+            bdd = alreadyVisitedNodes.get(hashValue);
+        } else if (node.getType() == Node.Type.gate) {
             if (node.getOperator() == Node.Operator.AND) {
                 bdd = build(node.getNodes().get(0)).and(build(node.getNodes().get(1)));
             } else if (node.getOperator() == Node.Operator.OR) {
@@ -45,6 +52,7 @@ public class FTToBDD {
             probabilitiesFalse[counter] = 1 - node.getProbability();
             counter++;
         }
+        alreadyVisitedNodes.put(bdd.hashCode(), bdd);
 
         return bdd;
     }
