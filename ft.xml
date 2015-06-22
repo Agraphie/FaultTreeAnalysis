@@ -1,9 +1,0 @@
-<faultTree name="ExampleSlide12">
-    <event name="RAID Unavailable" id="RU" type="OR">
-        <event name="RAID controller failed" id="RC" probability="0.1"></event>
-        <event name="Discs failed" type="AND" id="DF">
-            <event name="Disc 1 failed" id="D1F" probability="0.2"></event>
-            <event name="Disc 2 failed" id="D2F" probability="0.2"></event>
-        </event>
-    </event>
-</faultTree>
