@@ -1,0 +1,15 @@
+<faultTree name="RAID Unavailable" id="RU">
+    <node type="gate" operator="OR" id="g1">
+        <node name="RAID controller failed" id="RC" type="event">
+            <probability>0.1</probability>
+        </node>
+        <node type="gate" operator="AND" id="g2">
+            <node type="event" name="Disc 1 failed" id="D1F">
+                <probability>0.2</probability>
+            </node>
+            <node type="event" name="Disc 2 failed" id="D2F">
+                <probability>0.2</probability>
+            </node>
+        </node>
+    </node>
+</faultTree>
