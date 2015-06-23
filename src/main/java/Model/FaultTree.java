@@ -8,11 +8,22 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FaultTree {
+
+
+    @XmlElement(required = true)
+    boolean continuousMC;
     @XmlElement
     Node node;
     @XmlAttribute
     String name;
     int varNum;
+    @XmlElement(name = "initialProbability")
+    double[] initialProbabilities;
+    @XmlElement
+    double missionTime;
+    @XmlElement
+    double samplingInterval;
+
 
     public Node getNode() {
         return node;
@@ -36,5 +47,37 @@ public class FaultTree {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isContinuousMC() {
+        return continuousMC;
+    }
+
+    public void setContinuousMC(boolean continuousMC) {
+        this.continuousMC = continuousMC;
+    }
+
+    public double[] getInitialProbabilities() {
+        return initialProbabilities;
+    }
+
+    public void setInitialProbabilities(double[] initialProbabilities) {
+        this.initialProbabilities = initialProbabilities;
+    }
+
+    public double getMissionTime() {
+        return missionTime;
+    }
+
+    public void setMissionTime(double missionTime) {
+        this.missionTime = missionTime;
+    }
+
+    public double getSamplingInterval() {
+        return samplingInterval;
+    }
+
+    public void setSamplingInterval(double samplingInterval) {
+        this.samplingInterval = samplingInterval;
     }
 }

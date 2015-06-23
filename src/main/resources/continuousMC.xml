@@ -1,17 +1,26 @@
 <faultTree name="RAID Unavailable" id="RU">
-    <continuousMC>false</continuousMC>
+    <continuousMC>true</continuousMC>
+    <initialProbability>0.9</initialProbability>
     <initialProbability>0.1</initialProbability>
-    <initialProbability>0.2</initialProbability>
-    <initialProbability>0.2</initialProbability>
+    <initialProbability>0</initialProbability>
     <missionTime>40</missionTime>
     <samplingInterval>0.5</samplingInterval>
     <node type="gate" operator="OR" id="g1">
         <node name="RAID controller failed" id="RC" type="event">
+            <probability>-0.2</probability>
+            <probability>0.2</probability>
+            <probability>0</probability>
         </node>
         <node type="gate" operator="AND" id="g2">
             <node type="event" name="Disc 1 failed" id="D1F">
+                <probability>0.1</probability>
+                <probability>-0.2</probability>
+                <probability>0.1</probability>
             </node>
             <node type="event" name="Disc 2 failed" id="D2F">
+                <probability>0</probability>
+                <probability>0.05</probability>
+                <probability>-0.05</probability>
             </node>
         </node>
     </node>

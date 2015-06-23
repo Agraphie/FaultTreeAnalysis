@@ -18,8 +18,8 @@ public class Node {
     String name;
     @XmlAttribute
     String id;
-    @XmlElement
-    double probability;
+    @XmlElement(name = "probability")
+    double[] probabilities;
     @XmlElement(name = "node")
     List<Node> nodes;
 
@@ -47,6 +47,14 @@ public class Node {
         this.operator = operator;
     }
 
+    public double[] getProbabilities() {
+        return probabilities;
+    }
+
+    public void setProbabilities(double[] probabilities) {
+        this.probabilities = probabilities;
+    }
+
     public String getName() {
         return name;
     }
@@ -54,6 +62,7 @@ public class Node {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getId() {
         return id;
@@ -63,13 +72,6 @@ public class Node {
         this.id = id;
     }
 
-    public double getProbability() {
-        return probability;
-    }
-
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
 
     public enum Type {
         gate, event

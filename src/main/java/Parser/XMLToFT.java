@@ -13,7 +13,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 
 /**
- * Created by Kazako on 30.05.2015.
+ * Created by Agraphie on 30.05.2015.
  */
 public class XMLToFT {
     FaultTree faultTree = null;
@@ -34,7 +34,6 @@ public class XMLToFT {
                     String value = super.getAttributeValue(index);
                     if (value.equals("event")) {
                         increaseVarNum();
-
                     }
 
                     return value;

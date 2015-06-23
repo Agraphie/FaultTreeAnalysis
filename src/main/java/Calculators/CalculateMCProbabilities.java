@@ -1,3 +1,5 @@
+package Calculators;
+
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
@@ -23,7 +25,10 @@ public class CalculateMCProbabilities {
      * @param missionTime The complete mission time till what t the probabilities should be calculated.
      * @return The probability matrix as RealMatrix, where the row are the probabilities at time t and the columns are the states.
      */
-    public RealMatrix calculateMCProbabilities(double[] initialProbabilities, double[][] generatorMatrix, double samplingInterval, double missionTime) {
+    public RealMatrix calculateMCProbabilities(double[] initialProbabilities, RealMatrix generatorMatrix, double samplingInterval, double missionTime) {
+        if (missionTime == 0) {
+            return MatrixUtils.createRowRealMatrix(initialProbabilities);
+        }
         Integer matrixEntries = ((Double) (missionTime / samplingInterval)).intValue();
         int iterations = 20;
         double lambda = getLambda(generatorMatrix);
@@ -32,14 +37,14 @@ public class CalculateMCProbabilities {
         int matrixColumnCount = initialProbabilities.length;
 
         RealMatrix multiplicationMatrix = MatrixUtils.createRealMatrix(iterations, matrixColumnCount);
-        RealMatrix realGeneratorMatrix = MatrixUtils.createRealMatrix(generatorMatrix);
         RealMatrix result = MatrixUtils.createRealMatrix(matrixEntries + 1, matrixColumnCount);
         RealVector initialProbabilitiesVector = MatrixUtils.createRealVector(initialProbabilities);
         RealMatrix identityMatrix = MatrixUtils.createRealIdentityMatrix(matrixColumnCount);
-        RealMatrix transitionMatrix = identityMatrix.add(realGeneratorMatrix.scalarMultiply(1 / lambda));
+        RealMatrix transitionMatrix = identityMatrix.add(generatorMatrix.scalarMultiply(1 / lambda));
 
         RealVector tempIterationVector;
         RealMatrix tempIterationTransitionMatrix;
+        System.out.println(transitionMatrix.toString());
 
         result.setRowVector(0, initialProbabilitiesVector);
         for (int i = 0; i < iterations; i++) {
@@ -59,7 +64,7 @@ public class CalculateMCProbabilities {
             result.setRowVector(iterationPosition, tempIterationVector);
             iterationPosition++;
         }
-
+        System.out.println(result.toString());
         return result;
     }
 
@@ -68,11 +73,13 @@ public class CalculateMCProbabilities {
      * @param generatorMatrix The original generator matrix.
      * @return The maximum on the diagonal of the generator matrix.
      */
-    private double getLambda(double[][] generatorMatrix) {
+    private double getLambda(RealMatrix generatorMatrix) {
         double lambda = 0;
-        for (int i = 0; i < generatorMatrix.length; i++) {
-            if (Math.abs(generatorMatrix[i][i]) > lambda) {
-                lambda = Math.abs(generatorMatrix[i][i]);
+        double tempMax;
+        for (int i = 0; i < generatorMatrix.getColumnDimension(); i++) {
+            tempMax = Math.abs(generatorMatrix.getEntry(i, i));
+            if (tempMax > lambda) {
+                lambda = tempMax;
             }
         }
         return lambda;
