@@ -6,7 +6,7 @@ import org.apache.commons.math3.linear.RealVector;
 import java.util.List;
 
 /**
- * Created by Kazakor on 23.06.2015.
+ * Created by Agraphie on 23.06.2015.
  */
 public class CalculateDiscreteProbabilities {
 

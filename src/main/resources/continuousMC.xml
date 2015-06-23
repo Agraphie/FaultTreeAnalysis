@@ -1,26 +1,109 @@
-<faultTree name="RAID Unavailable" id="RU">
+<faultTree name="Example FT" id="17">
     <continuousMC>true</continuousMC>
-    <initialProbability>0.9</initialProbability>
-    <initialProbability>0.1</initialProbability>
-    <initialProbability>0</initialProbability>
+
     <missionTime>40</missionTime>
     <samplingInterval>0.5</samplingInterval>
-    <node type="gate" operator="OR" id="g1">
-        <node name="RAID controller failed" id="RC" type="event">
-            <probability>-0.2</probability>
-            <probability>0.2</probability>
+    <node type="gate" operator="AND" id="16">
+        <node name="State 6" id="6" type="event">
+            <initialProbability>0</initialProbability>
+            <probability>0</probability>
+            <probability>0</probability>
+            <probability>0</probability>
+            <probability>0</probability>
+            <probability>0</probability>
             <probability>0</probability>
         </node>
-        <node type="gate" operator="AND" id="g2">
-            <node type="event" name="Disc 1 failed" id="D1F">
-                <probability>0.1</probability>
-                <probability>-0.2</probability>
-                <probability>0.1</probability>
+        <node type="gate" operator="AND" id="15">
+            <node type="gate" operator="AND" id="13">
+                <node name="State 5" id="5" type="event">
+                    <initialProbability>0</initialProbability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0.05</probability>
+                </node>
+                <node name="State 2" id="2" type="event">
+                    <initialProbability>0.1</initialProbability>
+                    <probability>0.1</probability>
+                    <probability>0</probability>
+                    <probability>0.1</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                </node>
             </node>
-            <node type="event" name="Disc 2 failed" id="D2F">
+            <node type="gate" operator="OR" id="14">
+                <node type="gate" operator="AND" id="13">
+                    <node name="State 5" id="5" type="event">
+                        <initialProbability>0</initialProbability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0.05</probability>
+                    </node>
+                    <node name="State 2" id="2" type="event">
+                        <initialProbability>0.1</initialProbability>
+                        <probability>0.1</probability>
+                        <probability>0</probability>
+                        <probability>0.1</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                    </node>
+                </node>
+                <node name="State 3" id="3" type="event">
+                    <initialProbability>0</initialProbability>
+                    <probability>0</probability>
+                    <probability>0.05</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                </node>
+                <node type="gate" operator="AND" id="12">
+                    <node name="State 4" id="4" type="event">
+                        <initialProbability>1.0</initialProbability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0.1</probability>
+                        <probability>0</probability>
+                    </node>
+                    <node type="gate" operator="OR" id="11">
+                        <node name="State 2" id="2" type="event">
+                            <initialProbability>0.1</initialProbability>
+                            <probability>0.1</probability>
+                            <probability>0</probability>
+                            <probability>0.1</probability>
+                            <probability>0</probability>
+                            <probability>0</probability>
+                            <probability>0</probability>
+                        </node>
+                        <node name="State 1" id="1" type="event">
+                            <initialProbability>0.9</initialProbability>
+                            <probability>0</probability>
+                            <probability>0.2</probability>
+                            <probability>0</probability>
+                            <probability>0</probability>
+                            <probability>0</probability>
+                            <probability>0</probability>
+                        </node>
+                    </node>
+                </node>
+            </node>
+            <node name="State 3" id="3" type="event">
+                <initialProbability>0</initialProbability>
                 <probability>0</probability>
                 <probability>0.05</probability>
-                <probability>-0.05</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
             </node>
         </node>
     </node>

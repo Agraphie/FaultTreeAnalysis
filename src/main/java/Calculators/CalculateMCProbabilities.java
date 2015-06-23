@@ -7,7 +7,7 @@ import org.apache.commons.math3.linear.RealVector;
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
 /**
- * Created by Kazakor on 22.06.2015.
+ * Created by Agraphie on 22.06.2015.
  */
 public class CalculateMCProbabilities {
 
@@ -44,7 +44,6 @@ public class CalculateMCProbabilities {
 
         RealVector tempIterationVector;
         RealMatrix tempIterationTransitionMatrix;
-        System.out.println(transitionMatrix.toString());
 
         result.setRowVector(0, initialProbabilitiesVector);
         for (int i = 0; i < iterations; i++) {
@@ -52,6 +51,7 @@ public class CalculateMCProbabilities {
             tempIterationVector = tempIterationTransitionMatrix.preMultiply(initialProbabilitiesVector);
             multiplicationMatrix.setRowVector(i, tempIterationVector);
         }
+        System.out.println(initialProbabilitiesVector.toString());
 
         for (double t = samplingInterval; t <= missionTime; t += samplingInterval) {
             tempIterationVector = result.getRowVector(iterationPosition);
@@ -84,5 +84,4 @@ public class CalculateMCProbabilities {
         }
         return lambda;
     }
-
 }

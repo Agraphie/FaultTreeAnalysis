@@ -17,8 +17,6 @@ public class FaultTree {
     @XmlAttribute
     String name;
     int varNum;
-    @XmlElement(name = "initialProbability")
-    double[] initialProbabilities;
     @XmlElement
     double missionTime;
     @XmlElement
@@ -55,14 +53,6 @@ public class FaultTree {
 
     public void setContinuousMC(boolean continuousMC) {
         this.continuousMC = continuousMC;
-    }
-
-    public double[] getInitialProbabilities() {
-        return initialProbabilities;
-    }
-
-    public void setInitialProbabilities(double[] initialProbabilities) {
-        this.initialProbabilities = initialProbabilities;
     }
 
     public double getMissionTime() {

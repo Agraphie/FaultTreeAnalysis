@@ -20,6 +20,9 @@ public class Node {
     String id;
     @XmlElement(name = "probability")
     double[] probabilities;
+    @XmlElement
+    double initialProbability;
+
     @XmlElement(name = "node")
     List<Node> nodes;
 
@@ -72,6 +75,13 @@ public class Node {
         this.id = id;
     }
 
+    public double getInitialProbability() {
+        return initialProbability;
+    }
+
+    public void setInitialProbability(double initialProbability) {
+        this.initialProbability = initialProbability;
+    }
 
     public enum Type {
         gate, event
