@@ -1,8 +1,14 @@
 package Calculators;
 
+import net.sf.javabdd.BDD;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
@@ -10,6 +16,14 @@ import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
  * Created by Agraphie on 22.06.2015.
  */
 public class CalculateMCProbabilities {
+
+    RealMatrix meh;
+    List<HashSet<BDD>> mc = new LinkedList<>();
+    HashMap<Integer, Double> visited = new HashMap<>();
+
+    public CalculateMCProbabilities() {
+
+    }
 
     /**
      * Calculates the probability matrix for continous markov chains by using uniformization,
@@ -58,13 +72,17 @@ public class CalculateMCProbabilities {
 
             for (int n = 0; n < iterations; n++) {
                 tempMultiplier = Math.pow((lambda * t), n) / factorial(n) * Math.exp(-lambda * t);
-                tempIterationVector = tempIterationVector.add(multiplicationMatrix.getRowVector(n).mapMultiply(tempMultiplier));
+                tempIterationVector = tempIterationVector
+                        .add(multiplicationMatrix
+                                .getRowVector(n)
+                                .mapMultiply(tempMultiplier));
             }
 
             result.setRowVector(iterationPosition, tempIterationVector);
             iterationPosition++;
         }
-        System.out.println(result.toString());
+        System.out.println(multiplicationMatrix.toString());
+
         return result;
     }
 
@@ -83,5 +101,88 @@ public class CalculateMCProbabilities {
             }
         }
         return lambda;
+    }
+
+    public void foo(BDD bdd, RealMatrix realMatrix) {
+        meh = realMatrix;
+        HashSet<BDD> mc1 = new HashSet<>();
+        HashSet<BDD> mc2 = new HashSet<>();
+        mc1.add(bdd.getFactory().ithVar(0));
+        mc1.add(bdd.getFactory().ithVar(1));
+        mc1.add(bdd.getFactory().ithVar(2));
+
+        mc2.add(bdd.getFactory().ithVar(3));
+        mc2.add(bdd.getFactory().ithVar(4));
+        mc2.add(bdd.getFactory().ithVar(5));
+
+        mc.add(mc1);
+        mc.add(mc2);
+
+        System.out.println(bdd.support().toString() + " 123");
+
+        System.out.println(prob(bdd) + " prob");
+    }
+
+    public double prob(BDD bdd) {
+        System.out.println(bdd.id());
+        if (bdd.isOne()) {
+            return 1;
+        } else if (bdd.isZero()) {
+            return 0;
+        } else if (visited.containsKey(bdd.hashCode())) {
+            System.out.println("visiiited");
+            return visited.get(bdd.hashCode());
+        } else {
+            double probability;
+            double probabilityLow = prob(bdd.low());
+            boolean found = false;
+            for (HashSet<BDD> hashSet : mc) {
+                if (hashSet.contains(bdd) && hashSet.contains(bdd.low())) {
+                    found = true;
+                }
+            }
+            if (found) {
+                probability = probabilityLow + meh.getEntry(1, bdd.var()) * (prob(bdd.high()) - probabilityLow);
+                System.out.println("meh");
+
+            } else {
+                probability = probabilityLow + meh.getEntry(1, bdd.var()) * (prob(bdd.high()) - prob(bdd.low().low()));
+                System.out.println("muh");
+
+            }
+
+            visited.put(bdd.hashCode(), probability);
+
+            return probability;
+        }
+    }
+
+    public boolean aDependentB(BDD a, BDD b) {
+
+        return true;
+    }
+
+    public List<RealMatrix> calculateTopEvent(BDD bdd, RealMatrix failureMatrix) {
+        List list = (List) bdd.allsat();
+        List<RealMatrix> failureRateWithTopEventFailure = new LinkedList<>();
+        double tempProb;
+        RealMatrix tempMatrix;
+
+        for (Object satObject : list) {
+            tempMatrix = MatrixUtils.createRealMatrix(failureMatrix.getRowDimension(), failureMatrix.getColumnDimension() + 1);
+            tempMatrix.setSubMatrix(failureMatrix.getData(), 0, 0);
+            byte[] sat = (byte[]) satObject;
+            for (int j = 80; j < 81; j++) {
+                tempProb = 1;
+                for (int i = 0; i < sat.length; i++) {
+                    if (sat[i] == 1) {
+                        tempProb *= failureMatrix.getEntry(j, i);
+                    }
+                }
+                tempMatrix.setEntry(j, tempMatrix.getColumnDimension() - 1, tempProb);
+                failureRateWithTopEventFailure.add(tempMatrix);
+            }
+        }
+        return failureRateWithTopEventFailure;
     }
 }

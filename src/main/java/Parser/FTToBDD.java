@@ -56,8 +56,6 @@ public class FTToBDD {
             bddWithProbabilities = new BDDWithProbabilities(bdd, null, initialProbabilities, isContinuous, 0, 0);
         }
 
-
-
         return bddWithProbabilities;
     }
 

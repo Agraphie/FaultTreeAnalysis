@@ -96,15 +96,14 @@
                     </node>
                 </node>
             </node>
-            <node name="State 3" id="3" type="event">
-                <initialProbability>0</initialProbability>
-                <probability>0</probability>
-                <probability>0.05</probability>
-                <probability>0</probability>
-                <probability>0</probability>
-                <probability>0</probability>
-                <probability>0</probability>
-            </node>
         </node>
     </node>
+
+    <markovChains>
+        <markovChain>
+            <source></source>
+            <destination></destination>
+            <transitionRate></transitionRate>
+        </markovChain>
+    </markovChains>
 </faultTree>

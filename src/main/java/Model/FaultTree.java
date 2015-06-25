@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FaultTree {
 
-
     @XmlElement(required = true)
     boolean continuousMC;
     @XmlElement
