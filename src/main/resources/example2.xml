@@ -1,0 +1,84 @@
+<faultTree name="Example FT" id="17">
+    <continuousMC>true</continuousMC>
+
+    <missionTime>40</missionTime>
+    <samplingInterval>0.5</samplingInterval>
+
+    <node type="gate" operator="AND" id="15">
+        <node type="gate" operator="AND" id="13">
+            <node name="State 5" id="5" type="event">
+                <initialProbability>0</initialProbability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+            </node>
+            <node name="State 2" id="2" type="event">
+                <initialProbability>0.1</initialProbability>
+                <probability>0.1</probability>
+                <probability>0</probability>
+                <probability>0.1</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+            </node>
+        </node>
+        <node type="gate" operator="OR" id="14">
+            <node type="gate" operator="AND" id="13">
+                <node name="State 5" id="5" type="event">
+                    <initialProbability>0</initialProbability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                </node>
+                <node name="State 2" id="2" type="event">
+                    <initialProbability>0.1</initialProbability>
+                    <probability>0.1</probability>
+                    <probability>0</probability>
+                    <probability>0.1</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                </node>
+            </node>
+            <node name="State 3" id="3" type="event">
+                <initialProbability>0</initialProbability>
+                <probability>0</probability>
+                <probability>0.05</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+                <probability>0</probability>
+            </node>
+            <node type="gate" operator="AND" id="12">
+                <node name="State 4" id="4" type="event">
+                    <initialProbability>1.0</initialProbability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0</probability>
+                    <probability>0.1</probability>
+                </node>
+                <node type="gate" operator="OR" id="11">
+                    <node name="State 2" id="2" type="event">
+                        <initialProbability>0.1</initialProbability>
+                        <probability>0.1</probability>
+                        <probability>0</probability>
+                        <probability>0.1</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                    </node>
+                    <node name="State 1" id="1" type="event">
+                        <initialProbability>0.9</initialProbability>
+                        <probability>0</probability>
+                        <probability>0.2</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                        <probability>0</probability>
+                    </node>
+                </node>
+            </node>
+        </node>
+    </node>
+
+</faultTree>

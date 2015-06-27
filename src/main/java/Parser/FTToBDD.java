@@ -21,14 +21,15 @@ public class FTToBDD {
     private RealMatrix generatorMatrix;
     private RealVector initialProbabilities;
     private boolean isContinuous;
+    private HashMap<Integer, Integer> markovChains;
+    private String[] variableMapping;
 
     public BDDWithProbabilities parse(FaultTree faultTree) {
         int varNum = faultTree.getVarNum();
         bddFactory = BDDFactory.init(faultTree.getVarNum(), varNum);
         bddFactory.setVarNum(varNum);
         isContinuous = faultTree.isContinuousMC();
-
-        System.out.println(varNum + " varnum");
+        variableMapping = new String[varNum + 1];
         alreadyVisitedNodes = new HashMap<>();
         Node tempNode = faultTree.getNode();
         BDD bdd;
@@ -37,23 +38,42 @@ public class FTToBDD {
         if (isContinuous) {
             generatorMatrix = MatrixUtils.createRealMatrix(varNum, varNum);
             initialProbabilities = generatorMatrix.getRowVector(0);
+            markovChains = new HashMap<>();
             bdd = build(tempNode);
+
             double tempSum;
             int rowDimension = generatorMatrix.getRowDimension();
-
+            int counter = 0;
             for (int i = 0; i < rowDimension; i++) {
                 tempSum = 0;
-                for (int j = 0; j < rowDimension; j++) {
+                for (int j = 0; j < generatorMatrix.getColumnDimension(); j++) {
                     if (i != j) {
                         tempSum += generatorMatrix.getEntry(i, j);
                     }
+                    if (generatorMatrix.getEntry(i, j) != 0) {
+                        if (markovChains.containsKey(j)) {
+                            markovChains.put(j, markovChains.get(j));
+                        } else if (markovChains.containsKey(i)) {
+                            markovChains.put(j, markovChains.get(i));
+                        } else {
+                            markovChains.put(i, counter);
+                            markovChains.put(j, counter);
+                            counter++;
+                        }
+                    }
+                }
+                if (!markovChains.containsKey(i)) {
+                    markovChains.put(i, counter);
+                    counter++;
                 }
                 generatorMatrix.setEntry(i, i, -tempSum);
             }
-            bddWithProbabilities = new BDDWithProbabilities(bdd, generatorMatrix, initialProbabilities, isContinuous, faultTree.getMissionTime(), faultTree.getSamplingInterval());
+            variableMapping[varNum] = "Top event";
+            bddWithProbabilities = new BDDWithProbabilities(bdd, generatorMatrix, initialProbabilities, isContinuous,
+                    faultTree.getMissionTime(), faultTree.getSamplingInterval(), markovChains, variableMapping);
         } else {
             bdd = build(tempNode);
-            bddWithProbabilities = new BDDWithProbabilities(bdd, null, initialProbabilities, isContinuous, 0, 0);
+            bddWithProbabilities = new BDDWithProbabilities(bdd, null, initialProbabilities, isContinuous, 0, 0, markovChains, variableMapping);
         }
 
         return bddWithProbabilities;
@@ -85,6 +105,7 @@ public class FTToBDD {
                 if (node.getProbabilities() != null) {
                     generatorMatrix.setRow(counter, node.getProbabilities());
                     initialProbabilities.setEntry(counter, node.getInitialProbability());
+                    variableMapping[counter] = node.getName();
                 }
             }
         }

@@ -65,7 +65,6 @@ public class CalculateMCProbabilities {
             tempIterationVector = tempIterationTransitionMatrix.preMultiply(initialProbabilitiesVector);
             multiplicationMatrix.setRowVector(i, tempIterationVector);
         }
-        System.out.println(initialProbabilitiesVector.toString());
 
         for (double t = samplingInterval; t <= missionTime; t += samplingInterval) {
             tempIterationVector = result.getRowVector(iterationPosition);
@@ -81,7 +80,7 @@ public class CalculateMCProbabilities {
             result.setRowVector(iterationPosition, tempIterationVector);
             iterationPosition++;
         }
-        System.out.println(multiplicationMatrix.toString());
+        System.out.println(result.toString());
 
         return result;
     }
@@ -118,13 +117,10 @@ public class CalculateMCProbabilities {
         mc.add(mc1);
         mc.add(mc2);
 
-        System.out.println(bdd.support().toString() + " 123");
-
         System.out.println(prob(bdd) + " prob");
     }
 
     public double prob(BDD bdd) {
-        System.out.println(bdd.id());
         if (bdd.isOne()) {
             return 1;
         } else if (bdd.isZero()) {
@@ -143,12 +139,8 @@ public class CalculateMCProbabilities {
             }
             if (found) {
                 probability = probabilityLow + meh.getEntry(1, bdd.var()) * (prob(bdd.high()) - probabilityLow);
-                System.out.println("meh");
-
             } else {
                 probability = probabilityLow + meh.getEntry(1, bdd.var()) * (prob(bdd.high()) - prob(bdd.low().low()));
-                System.out.println("muh");
-
             }
 
             visited.put(bdd.hashCode(), probability);
@@ -162,27 +154,53 @@ public class CalculateMCProbabilities {
         return true;
     }
 
-    public List<RealMatrix> calculateTopEvent(BDD bdd, RealMatrix failureMatrix) {
+    public RealMatrix calculateTopEvent(BDD bdd, RealMatrix failureMatrix, HashMap<Integer, Integer> markovChains) {
         List list = (List) bdd.allsat();
-        List<RealMatrix> failureRateWithTopEventFailure = new LinkedList<>();
+        RealMatrix failureRateWithTopEventFailure = MatrixUtils.createRealMatrix(failureMatrix.getRowDimension(), failureMatrix.getColumnDimension() + 1);
+        failureRateWithTopEventFailure.setSubMatrix(failureMatrix.getData(), 0, 0);
         double tempProb;
-        RealMatrix tempMatrix;
-
+        double calculatedProb;
         for (Object satObject : list) {
-            tempMatrix = MatrixUtils.createRealMatrix(failureMatrix.getRowDimension(), failureMatrix.getColumnDimension() + 1);
-            tempMatrix.setSubMatrix(failureMatrix.getData(), 0, 0);
             byte[] sat = (byte[]) satObject;
-            for (int j = 80; j < 81; j++) {
-                tempProb = 1;
-                for (int i = 0; i < sat.length; i++) {
-                    if (sat[i] == 1) {
-                        tempProb *= failureMatrix.getEntry(j, i);
+            //scan for independence
+            scanForIndependenceAndCalculateProbabilities(failureMatrix, markovChains, failureRateWithTopEventFailure, sat);
+        }
+
+        return failureRateWithTopEventFailure;
+    }
+
+    private void scanForIndependenceAndCalculateProbabilities(RealMatrix failureMatrix, HashMap<Integer,
+            Integer> markovChains, RealMatrix failureRateWithTopEventFailure, byte[] sat) {
+        double tempProb;
+        double calculatedProb;
+        int m;
+        int u;
+
+        //are the states independent?
+        for (int j = 0; j < sat.length; j++) {
+            m = sat[j];
+            for (int n = j; n < sat.length; n++) {
+                u = sat[n];
+                if (j != n && m == 1 && u == 1) {
+                    if (markovChains.get(j) == markovChains.get(n)) {
+                        return;
                     }
                 }
-                tempMatrix.setEntry(j, tempMatrix.getColumnDimension() - 1, tempProb);
-                failureRateWithTopEventFailure.add(tempMatrix);
             }
         }
-        return failureRateWithTopEventFailure;
+
+        //they really are independent
+        for (int j = 0; j < failureMatrix.getRowDimension(); j++) {
+            tempProb = 1;
+            calculatedProb = failureRateWithTopEventFailure.getEntry(j, failureMatrix.getColumnDimension());
+            for (int i = 0; i < sat.length; i++) {
+                if (sat[i] == 1) {
+                    tempProb *= failureMatrix.getEntry(j, i);
+                } else if (sat[i] == 0) {
+                    tempProb *= 1 - failureMatrix.getEntry(j, i);
+                }
+            }
+            failureRateWithTopEventFailure.setEntry(j, failureMatrix.getColumnDimension(), tempProb + calculatedProb);
+        }
     }
 }
