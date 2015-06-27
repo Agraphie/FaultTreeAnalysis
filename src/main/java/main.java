@@ -32,7 +32,7 @@ public class main {
 
         RealMatrix failureMatrixWithTE = calculateMCProbabilities.calculateTopEvent(bdd.getBdd(), failureMatrix, bdd.getMarkovChains());
         chart.printChart(failureMatrixWithTE, bdd.getColumnToVariableMapping(), bdd.getSamplingInterval(), bdd.getMissionTime());
-
+        System.out.println(failureMatrixWithTE.toString());
 
         //   printer.printBDDToDOT(bdd.getBdd(), new File("C:\\Users\\Kazakor\\Documents\\newfile.txt"));
     }

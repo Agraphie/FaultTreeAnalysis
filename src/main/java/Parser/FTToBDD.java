@@ -50,24 +50,16 @@ public class FTToBDD {
                     if (i != j) {
                         tempSum += generatorMatrix.getEntry(i, j);
                     }
-                    if (generatorMatrix.getEntry(i, j) != 0) {
-                        if (markovChains.containsKey(j)) {
-                            markovChains.put(j, markovChains.get(j));
-                        } else if (markovChains.containsKey(i)) {
-                            markovChains.put(j, markovChains.get(i));
-                        } else {
-                            markovChains.put(i, counter);
-                            markovChains.put(j, counter);
-                            counter++;
-                        }
-                    }
+                    counter = checkMarkovChain(counter, i, j);
                 }
+
                 if (!markovChains.containsKey(i)) {
                     markovChains.put(i, counter);
                     counter++;
                 }
                 generatorMatrix.setEntry(i, i, -tempSum);
             }
+
             variableMapping[varNum] = "Top event";
             bddWithProbabilities = new BDDWithProbabilities(bdd, generatorMatrix, initialProbabilities, isContinuous,
                     faultTree.getMissionTime(), faultTree.getSamplingInterval(), markovChains, variableMapping);
@@ -77,6 +69,31 @@ public class FTToBDD {
         }
 
         return bddWithProbabilities;
+    }
+
+    /**
+     * Checks whether an entry is in an markov chain already or not. If an entry != 0, it means, the row has a transition to the column (but not vice versa!)
+     * If this is the case, then put the row and the column in one markov chain. If there is an entry whose row OR whose column is already in the map,
+     * then the row i.e. the column needs to be in the same chain.
+     *
+     * @param counter
+     * @param i
+     * @param j
+     * @return
+     */
+    private int checkMarkovChain(int counter, int i, int j) {
+        if (generatorMatrix.getEntry(i, j) != 0) {
+            if (markovChains.containsKey(i)) {
+                markovChains.put(j, markovChains.get(i));
+            } else if (markovChains.containsKey(j)) {
+                markovChains.put(i, markovChains.get(j));
+            } else {
+                markovChains.put(i, counter);
+                markovChains.put(j, counter);
+                counter++;
+            }
+        }
+        return counter;
     }
 
 

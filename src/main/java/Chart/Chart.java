@@ -35,7 +35,6 @@ public class Chart extends ApplicationFrame {
     }
 
     public void printChart(RealMatrix matrix, String[] variableMapping, double samplingInterval, double missionTime) {
-        System.out.println("muh");
         final XYDataset dataset = createDataset(matrix, variableMapping, samplingInterval);
         final JFreeChart chart = createChart(dataset);
         ((NumberAxis) chart.getXYPlot().getDomainAxis()).setRange(0, missionTime + 0.5);
