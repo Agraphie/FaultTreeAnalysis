@@ -7,7 +7,7 @@ public class FileHandler {
 
     public File getFile() {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("continuousMC.xml").getFile());
+        File file = new File(classLoader.getResource("meh.xml").getFile());
 
         return file;
     }

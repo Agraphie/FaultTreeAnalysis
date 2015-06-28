@@ -99,11 +99,4 @@
         </node>
     </node>
 
-    <markovChains>
-        <markovChain>
-            <source></source>
-            <destination></destination>
-            <transitionRate></transitionRate>
-        </markovChain>
-    </markovChains>
 </faultTree>

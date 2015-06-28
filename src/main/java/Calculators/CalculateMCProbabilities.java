@@ -5,10 +5,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.apache.commons.math3.util.CombinatoricsUtils.factorial;
 
@@ -60,7 +57,6 @@ public class CalculateMCProbabilities {
 
         result.setRowVector(0, initialProbabilitiesVector);
         RealMatrix multiplicationMatrix = calculateMultiplicationMatrix(iterations, initialProbabilitiesVector, transitionMatrix);
-
         for (double t = samplingInterval; t <= missionTime; t += samplingInterval) {
             tempIterationVector = result.getRowVector(iterationPosition);
 
@@ -80,12 +76,10 @@ public class CalculateMCProbabilities {
     }
 
     private RealMatrix calculateMultiplicationMatrix(int iterations, RealVector initialProbabilitiesVector, RealMatrix transitionMatrix) {
-        RealMatrix tempIterationTransitionMatrix;
-        RealVector tempIterationVector;
         RealMatrix multiplicationMatrix = MatrixUtils.createRealMatrix(iterations, transitionMatrix.getColumnDimension());
         for (int i = 0; i < iterations; i++) {
-            tempIterationTransitionMatrix = transitionMatrix.power(i);
-            tempIterationVector = tempIterationTransitionMatrix.preMultiply(initialProbabilitiesVector);
+            RealMatrix tempIterationTransitionMatrix = transitionMatrix.power(i);
+            RealVector tempIterationVector = tempIterationTransitionMatrix.preMultiply(initialProbabilitiesVector);
             multiplicationMatrix.setRowVector(i, tempIterationVector);
         }
 
@@ -100,9 +94,8 @@ public class CalculateMCProbabilities {
      */
     private double getLambda(RealMatrix generatorMatrix) {
         double lambda = 0;
-        double tempMax;
         for (int i = 0; i < generatorMatrix.getColumnDimension(); i++) {
-            tempMax = Math.abs(generatorMatrix.getEntry(i, i));
+            double tempMax = Math.abs(generatorMatrix.getEntry(i, i));
             if (tempMax > lambda) {
                 lambda = tempMax;
             }
@@ -136,21 +129,22 @@ public class CalculateMCProbabilities {
      */
     private void scanForIndependenceAndCalculateProbabilities(RealMatrix failureMatrix, HashMap<Integer,
             Integer> markovChains, RealMatrix failureRateWithTopEventFailure, byte[] sat) {
-        double tempProb;
-        double calculatedProb;
         if (scanForIndependence(markovChains, sat)) {
             return;
         }
-
+        System.out.println(Arrays.toString(sat));
         //they really are independent
         for (int j = 0; j < failureMatrix.getRowDimension(); j++) {
-            tempProb = 1;
-            calculatedProb = failureRateWithTopEventFailure.getEntry(j, failureMatrix.getColumnDimension());
+            double tempProb = 1;
+            double calculatedProb = failureRateWithTopEventFailure.getEntry(j, failureMatrix.getColumnDimension());
             for (int i = 0; i < sat.length; i++) {
                 if (sat[i] == 1) {
                     tempProb *= failureMatrix.getEntry(j, i);
                 } else if (sat[i] == 0) {
-                    tempProb *= 1 - failureMatrix.getEntry(j, i);
+                    //check if there is another state in the same markov chain
+                    if (Collections.frequency(markovChains.values(), markovChains.get(i)) == 1) {
+                        tempProb *= 1 - failureMatrix.getEntry(j, i);
+                    }
                 }
             }
             failureRateWithTopEventFailure.setEntry(j, failureMatrix.getColumnDimension(), tempProb + calculatedProb);
@@ -158,12 +152,11 @@ public class CalculateMCProbabilities {
     }
 
     private boolean scanForIndependence(HashMap<Integer, Integer> markovChains, byte[] sat) {
-        int m;
-        int u;//are the states independent?
+        //are the states independent?
         for (int j = 0; j < sat.length; j++) {
-            m = sat[j];
+            int m = sat[j];
             for (int n = j; n < sat.length; n++) {
-                u = sat[n];
+                int u = sat[n];
                 if (j != n && m == 1 && u == 1) {
                     if (markovChains.get(j) == markovChains.get(n)) {
                         return true;

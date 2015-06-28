@@ -40,6 +40,7 @@ public class FTToBDD {
             initialProbabilities = generatorMatrix.getRowVector(0);
             markovChains = new HashMap<>();
             bdd = build(tempNode);
+            System.out.println(initialProbabilities.toString());
 
             double tempSum;
             int rowDimension = generatorMatrix.getRowDimension();
@@ -61,6 +62,7 @@ public class FTToBDD {
             }
 
             variableMapping[varNum] = "Top event";
+
             bddWithProbabilities = new BDDWithProbabilities(bdd, generatorMatrix, initialProbabilities, isContinuous,
                     faultTree.getMissionTime(), faultTree.getSamplingInterval(), markovChains, variableMapping);
         } else {
@@ -121,6 +123,7 @@ public class FTToBDD {
             if (isContinuous) {
                 if (node.getProbabilities() != null) {
                     generatorMatrix.setRow(counter, node.getProbabilities());
+
                     initialProbabilities.setEntry(counter, node.getInitialProbability());
                     variableMapping[counter] = node.getName();
                 }
