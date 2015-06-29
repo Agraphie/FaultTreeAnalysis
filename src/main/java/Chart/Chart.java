@@ -12,9 +12,9 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -22,7 +22,7 @@ import java.awt.*;
  * A simple demonstration application showing how to create a line chart using data from an
  * {@link XYDataset}.
  */
-public class Chart extends ApplicationFrame {
+public class Chart extends JFrame {
 
     /**
      * Creates a new demo.
@@ -32,19 +32,23 @@ public class Chart extends ApplicationFrame {
     public Chart(final String title) {
 
         super(title);
+
     }
 
     public void printChart(RealMatrix matrix, String[] variableMapping, double samplingInterval, double missionTime) {
         final XYDataset dataset = createDataset(matrix, variableMapping, samplingInterval);
         final JFreeChart chart = createChart(dataset);
-        ((NumberAxis) chart.getXYPlot().getDomainAxis()).setRange(0, missionTime + 0.5);
+        chart.getXYPlot().getDomainAxis().setRange(0, missionTime + 0.5);
 
         final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setPreferredSize(new java.awt.Dimension(3000, 1570));
         setContentPane(chartPanel);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
         this.pack();
         RefineryUtilities.centerFrameOnScreen(this);
         this.setVisible(true);
+
     }
 
     /**
@@ -109,12 +113,10 @@ public class Chart extends ApplicationFrame {
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         ((NumberAxis) plot.getRangeAxis()).setTickUnit(new NumberTickUnit(0.05));
-        ((NumberAxis) plot.getRangeAxis()).setRange(0, 1);
+        plot.getRangeAxis().setRange(0, 1);
 
-        // OPTIONAL CUSTOMISATION COMPLETED.
 
         return chart;
-
     }
 
 }

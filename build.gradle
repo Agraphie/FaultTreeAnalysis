@@ -29,6 +29,7 @@ dependencies {
 run{
     dependsOn tasks.withType(Test)
     standardOutput = System.out
+    standardInput = System.in
 }
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4' //version required

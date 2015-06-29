@@ -18,9 +18,6 @@ public class CalculateMCProbabilities {
     List<HashSet<BDD>> mc = new LinkedList<>();
     HashMap<Integer, Double> visited = new HashMap<>();
 
-    public CalculateMCProbabilities() {
-
-    }
 
     /**
      * Calculates the probability matrix for continous markov chains by using uniformization,
@@ -158,7 +155,7 @@ public class CalculateMCProbabilities {
             for (int n = j; n < sat.length; n++) {
                 int u = sat[n];
                 if (j != n && m == 1 && u == 1) {
-                    if (markovChains.get(j) == markovChains.get(n)) {
+                    if (Objects.equals(markovChains.get(j), markovChains.get(n))) {
                         return true;
                     }
                 }

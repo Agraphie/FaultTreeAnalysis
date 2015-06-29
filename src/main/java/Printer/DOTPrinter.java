@@ -12,10 +12,11 @@ import java.util.Map;
 /**
  * Created by Agraphie on 26.06.2015.
  */
-public class Printer {
+public class DOTPrinter {
 
-    public void printBDDToDOT(BDD bdd, File file) {
+    public void printBDDToDOT(BDD bdd, String path, String fileName) {
         try {
+            File file = new File(path + "\\" + fileName + ".dot");
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
             writer.write("digraph G {");
             writer.newLine();
