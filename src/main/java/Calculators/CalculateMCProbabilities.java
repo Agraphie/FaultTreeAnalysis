@@ -126,7 +126,7 @@ public class CalculateMCProbabilities {
      */
     private void scanForIndependenceAndCalculateProbabilities(RealMatrix failureMatrix, HashMap<Integer,
             Integer> markovChains, RealMatrix failureRateWithTopEventFailure, byte[] sat) {
-        if (scanForIndependence(markovChains, sat)) {
+        if (!scanForIndependence(markovChains, sat)) {
             return;
         }
         System.out.println(Arrays.toString(sat));
@@ -152,15 +152,20 @@ public class CalculateMCProbabilities {
         //are the states independent?
         for (int j = 0; j < sat.length; j++) {
             int m = sat[j];
-            for (int n = j; n < sat.length; n++) {
+            int zeroCounter = 0;
+            for (int n = j + 1; n < sat.length; n++) {
                 int u = sat[n];
-                if (j != n && m == 1 && u == 1) {
-                    if (Objects.equals(markovChains.get(j), markovChains.get(n))) {
-                        return true;
+                if (Objects.equals(markovChains.get(j), markovChains.get(n))) {
+                    if (m == 1 && u == 1) {
+                        return false;
+                    } else if (m == 0 && u == 0) {
+                        zeroCounter++;
                     }
                 }
             }
+
+            if (zeroCounter == Collections.frequency(markovChains.values(), markovChains.get(j)) - 1) return false;
         }
-        return false;
+        return true;
     }
 }
