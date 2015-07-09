@@ -99,6 +99,7 @@ public class main {
         String path = br.readLine();
         System.out.print("Enter file name: ");
         String fileName = br.readLine();
+        path = path.replace("\\", "\\\\");
         csvPrinter.printMatrixToCSV(failureMatrixWithTE, bdd.getColumnToVariableMapping(), path, fileName);
     }
 
@@ -107,6 +108,7 @@ public class main {
         String path = br.readLine();
         System.out.print("Enter file name: ");
         String fileName = br.readLine();
+        path = path.replace("\\", "\\\\");
         DOTPrinter.printBDDToDOT(bdd.getBdd(), path, fileName);
     }
 
