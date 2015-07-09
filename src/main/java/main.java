@@ -107,9 +107,7 @@ public class main {
         String path = br.readLine();
         System.out.print("Enter file name: ");
         String fileName = br.readLine();
-        csvPrinter.printMatrixToCSV(failureMatrixWithTE, bdd.getColumnToVariableMapping(), path, fileName);
         DOTPrinter.printBDDToDOT(bdd.getBdd(), path, fileName);
-
     }
 
     private static void printGraph() {
