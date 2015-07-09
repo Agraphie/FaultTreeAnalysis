@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 sourceCompatibility = 1.8
-mainClassName = "main"
+mainClassName = "ApplicationMain"
 
 repositories {
     mavenCentral()
@@ -24,6 +24,16 @@ dependencies {
     compile 'org.jfree:jfreechart:1.0.19'
 
 
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'FaultTreeAnalysis',
+                'Main-Class': 'ApplicationMain'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 run{

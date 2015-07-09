@@ -11,4 +11,11 @@ public class FileHandler {
 
         return file;
     }
+
+    public File getFile(String path) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(path);
+
+        return file;
+    }
 }

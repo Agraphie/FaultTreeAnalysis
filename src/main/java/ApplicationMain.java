@@ -14,7 +14,7 @@ import java.io.*;
 /**
  * Created by Kazako on 30.05.2015.
  */
-public class main {
+public class ApplicationMain {
 
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static XMLToFT xmlToFT = new XMLToFT();
@@ -30,8 +30,23 @@ public class main {
     private static BDDWithProbabilities bdd;
 
     public static void main(String[] args) {
+        System.out.println();
+        System.out.print("Enter the path to an xml file if program is executed as JAR, otherwise press enter: ");
+        String path = "";
+        try {
+            path = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println();
         hideOutput();
-        FaultTree faultTree = xmlToFT.parse(fileHandler.getFile());
+
+        FaultTree faultTree;
+        if (!path.isEmpty()) {
+            faultTree = xmlToFT.parse(fileHandler.getFile(path));
+        } else {
+            faultTree = xmlToFT.parse(fileHandler.getFile());
+        }
 
 
         bdd = ftToBDD.parse(faultTree);
