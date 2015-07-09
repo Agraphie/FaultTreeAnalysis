@@ -23,6 +23,7 @@ public class Node {
     @XmlElement(name = "node")
     List<Node> nodes;
 
+
     public List<Node> getNodes() {
         return nodes;
     }
