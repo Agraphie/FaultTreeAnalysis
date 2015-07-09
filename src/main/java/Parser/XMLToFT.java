@@ -11,16 +11,19 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.util.HashSet;
 
 /**
- * Created by Kazako on 30.05.2015.
+ * Created by Agraphie on 30.05.2015.
  */
 public class XMLToFT {
     FaultTree faultTree = null;
     int varCount = 0;
+    HashSet<String> encounteredLeafs;
 
     public FaultTree parse(File file) {
         JAXBContext jaxbContext;
+        encounteredLeafs = new HashSet<>();
 
         try {
             jaxbContext = JAXBContext.newInstance(FaultTree.class);
@@ -31,10 +34,11 @@ public class XMLToFT {
 
                 @Override
                 public String getAttributeValue(int index) {
+
                     String value = super.getAttributeValue(index);
                     if (value.equals("event")) {
-                        increaseVarNum();
-
+                        String previousValue = super.getAttributeValue(index - 1);
+                        saveEventId(previousValue);
                     }
 
                     return value;
@@ -42,7 +46,7 @@ public class XMLToFT {
             };
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             faultTree = (FaultTree) jaxbUnmarshaller.unmarshal(xsr);
-            faultTree.setVarNum(varCount);
+            faultTree.setVarNum(encounteredLeafs.size());
 
         } catch (JAXBException | XMLStreamException e) {
             e.printStackTrace();
@@ -51,8 +55,8 @@ public class XMLToFT {
         return faultTree;
     }
 
-    private void increaseVarNum() {
-        varCount++;
+    private void saveEventId(String eventId) {
+        encounteredLeafs.add(eventId);
     }
 
 }
